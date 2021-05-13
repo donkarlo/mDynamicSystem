@@ -1,18 +1,17 @@
 from mMath.linearalgebra import Vector
 from mDynamicSystem.state import State
-from mDynamicSystem.state.observation import Observation
+from mDynamicSystem.measurement import Measurement
 import abc
 
-class MeasurementEquation(abc.ABCMeta):
-    '''z_k=Hx_{k}+v_{k}, v_{k}~N(0,R)
-
+class MeasurementModel(abc.ABCMeta):
+    '''z_k=h_k(x_k,u_k,n_k)
     '''
 
     def __init__(self
                  , currentState: State
                  , currentControlInput: Vector
                  , currentNoise: Vector
-                 ,timeStep:int):
+                 ,timeStep:int=None):
         '''
         :param currentState:
         :param currentControlInput
@@ -25,6 +24,6 @@ class MeasurementEquation(abc.ABCMeta):
         self.__timeStep: int = timeStep
 
     @abc.abstractmethod
-    def getCurrentObservation(self) -> Observation:
+    def getCurrentObservation(self) -> Measurement:
         pass
 

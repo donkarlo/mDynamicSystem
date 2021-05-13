@@ -15,8 +15,8 @@ class Kalman(Filter):
 
     Paired with
     -----
-    observation model: z_k=Hx_{k-1}=v_{k}
-    observation noise vector: v_k ~ N(0,R), R: measurement noise cov matrix
+    measurement model: z_k=Hx_{k-1}=v_{k}
+    measurement noise vector: v_k ~ N(0,R), R: measurement noise cov matrix
 
     Notation
     ---------
