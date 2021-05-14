@@ -9,23 +9,24 @@ class MeasurementsSerie():
 
     def __init__(self, observationList:List[Measurement]):
         ''''''
-        self.__observationList = observationList
+        self.__measurements = observationList
 
     def getByIdx(self, index: int) -> int:
         ''''''
-        return self.__observationList[index]
+        return self.__measurements[index]
 
     def getMeasurements(self)->List[Measurement]:
         ''''''
-        return self.__observationList
+        return self.__measurements
 
-    def getLastObservation(self)->Measurement:
+    def getLastMeasurement(self)->Measurement:
         ''''''
-        return self.__observationSerie.getByIdx(self.getLastObservationIndex())
+        return self.__measurements.getByIdx(self.getLastObservationIndex())
 
     def getObservationSlice(self,startIndex,endIndex)->List[Measurement]:
         ''''''
-        return self.__observationList[startIndex:endIndex]
+        return self.__measurements[startIndex:endIndex]
 
     def getLastObservationIndex(self):
-        return len(self.__observationList)-1
+        ''''''
+        return len(self.__measurements) - 1

@@ -1,6 +1,6 @@
 from typing import List
 
-from mDynamicSystem.actuator.Actuator import Actuator
+from mDynamicSystem.robot.actuator.Actuator import Actuator
 from mDynamicSystem.sensor import Sensor
 from mDynamicSystem.state.estimation.ProcessModel import ProcessModel
 

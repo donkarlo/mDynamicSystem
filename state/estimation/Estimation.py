@@ -5,7 +5,10 @@ from mDynamicSystem.measurement import MeasurementsSerie
 
 
 class Estimation(metaclass=abc.ABCMeta):
-    ''''''
+    '''
+    - The state estimate is represented by a pdf that quantifies both the estimated state and the uncertainty associated with the estimated value.
+    -
+    '''
     def __init__(self
                  , currentState:State
                  , inputControlsSerie:InputsSerie
@@ -19,12 +22,6 @@ class Estimation(metaclass=abc.ABCMeta):
         self.__currentState = currentState
         self.__inputControlsSerie = inputControlsSerie
         self.__measurementsSerie = measurementsSerie
-
     @abc.abstractmethod
-    def getPosterior(self)->float:
-        '''
-        This is the result we expect to recieve from any estimation
-        Calculate p(x_{1:k}|z_{1:k}) if it is a markov process then it will be p(x_{k}|z_{1:k})
-        :return:
-        '''
+    def getEstimatedState(self)->State:
         pass

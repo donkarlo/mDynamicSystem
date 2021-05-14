@@ -1,10 +1,10 @@
+from mMath.data.timeSerie.stochasticProcess.markov.state.State import State as MainState
 from mMath.linearalgebra.Vector import Vector
 
 
-class State(Vector):
+class State(MainState):
     """"""
 
-    def __init__(self,  time:int, refVec:Vector):
+    def __init__(self,  refVec:Vector):
         """"""
-        self.__time = time
         self.__refVec = refVec
