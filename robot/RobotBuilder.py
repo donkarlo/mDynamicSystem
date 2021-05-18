@@ -1,5 +1,5 @@
 from mDynamicSystem.robot.actuator.Actuator import Actuator
-from mDynamicSystem.robot.Robot import Sensor
+from mDynamicSystem.robot.sensor import Sensor
 
 
 class RobotBuilder:
@@ -8,7 +8,7 @@ class RobotBuilder:
         self.__sensors = []
         self.__actuators = []
 
-    def addSensor(self,sensor:Sensor):
+    def addSensor(self, sensor: Sensor):
         '''
         :param sensor:
         :return:

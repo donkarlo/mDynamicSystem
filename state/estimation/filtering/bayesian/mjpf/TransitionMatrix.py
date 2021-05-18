@@ -1,22 +1,31 @@
 from typing import List
 
-from mMath.linearalgebra.Matrix import Matrix
-from mMath.linearalgebra.Vector import Vector
+from mDynamicSystem.state.State import State
+from mMath.data.cluster.Cluster import Cluster
+from mMath.data.timeSerie.stochasticProcess.state.Serie import Serie as StateSerie
+from mMath.data.timeSerie.stochasticProcess.state.transitionMatrix.FromStateSerieBuilder import FromStateSerieBuilder
+from mMath.data.timeSerie.stochasticProcess.state.transitionMatrix.TransitionMatrix import TransitionMatrix as MainTransitionMatrix
+from mMath.linearAlgebra.matrix.Matrix import Matrix
 
 
-class TransitionMatrix:
+
+
+class TransitionMatrix(MainTransitionMatrix):
     ''''''
-    def __init__(self,
-                 inputData:Matrix
-                 ,clusters:List[List[Vector]]):
+    def __init__(self
+                 , clusters:List[Cluster]):
         '''
 
-        :param inputData:
+        :param measurementDataMatrix:
         :param clusters: An array of points represnet in vectors
         '''
-        self.__inputDate:Matrix = inputData
         self.__transitionMatrix:Matrix = None
-        self.__clusters:List[List[Vector]] = clusters
+        self.__clusters:List[Cluster] = clusters
+        #state sequence
+
+        self.__stateSerie:StateSerie = None
+        trMatBld:FromStateSerieBuilder=FromStateSerieBuilder()
+        super().__init__(self.__stateSerie)
 
     def getMatrix(self)->Matrix:
         ''''''
@@ -25,3 +34,5 @@ class TransitionMatrix:
                 pass
 
         return self.__transitionMatrix
+
+

@@ -1,6 +1,6 @@
 from typing import List
 
-from mMath.linearalgebra.Vector import Vector
+from mMath.linearAlgebra.Vector import Vector
 from mDynamicSystem.state import State
 
 

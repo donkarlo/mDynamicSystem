@@ -1,7 +1,7 @@
-from mMath.linearalgebra import Vector
-from mMath.linearalgebra.Matrix import Matrix
+from mMath.linearAlgebra import Vector
+from mMath.linearAlgebra.matrix.Matrix import Matrix
 from mDynamicSystem.state import State
-from mDynamicSystem.state.estimation import ProcessModel as MainStateModel
+from mDynamicSystem.state.estimation.processModel import ProcessModel as MainStateModel
 
 
 class StateModel(MainStateModel):

@@ -1,41 +1,32 @@
-import abc
-import numpy as np
-
-from numpy import ndarray
-
-from mDynamicSystem.state.estimation.ProcessModel import ProcessModel as MainProcessModel
-from mDynamicSystem.state import State
-from mMath.linearalgebra.Matrix import Matrix
-from mMath.linearalgebra.Vector import Vector
+ from mDynamicSystem.state import State
+from mDynamicSystem.state.estimation.filtering.bayesian.mjpf.TransitionMatrix import TransitionMatrix
+from mDynamicSystem.state.estimation.processModel.ProcessModelWithGaussianNoise import ProcessModelWithGaussianNoise
+from mMath.data.probability.continous.Gaussian import Gaussian
+from mMath.linearAlgebra.Vector import Vector
 
 
-class ProcessModel(MainProcessModel):
-
+class ProcessModel(ProcessModelWithGaussianNoise):
+    ''''''
     def __init__(self
-                 ,transitionMatrix:Matrix
                  , previousState: State
-                 , controlInput: Vector
-                 , previousNoise: Vector
-                 , timeStep: int = None
-                 ):
+                 , currentControlInput: Vector
+                 , gaussianNoisePdf:Gaussian
+                 , stateTransitionMatrix:TransitionMatrix):
         '''
 
-        :param transitionMatrix:
-        :param previousState: State here is a cluster
-        :param controlInput:
-        :param previousNoise:
-        :param timeStep:
+        :param stateTransitionMatrix:
+        :param gaussianNoisePdf:
         '''
-        self.__transitionMatrix:Matrix = transitionMatrix
-        super().__init__(previousState,controlInput,previousNoise,timeStep)
+        self.__stateTransitionMatrix = stateTransitionMatrix
+        self.__gaussianNoisePdf = gaussianNoisePdf
+        super().__init__(previousState, currentControlInput,self.getPreviousNoise())
 
-    def getCurrentState(self) -> State:
-        ''''''
-        npRow:np.ndarray = self.__transitionMatrix.getNpRowByIndex(self.__getTransitionMatrixRowIndexForPreviousState())
-        return np.max(npRow)
+    def getPredictedState(self) -> State:
+        '''
+        :return:
+        '''
+        predictedState:State = State(self.__stateTransitionMatrix.getNextMostProbableStateByState(self.getPreviousState()).getRefVec() + self.getPreviousNoise())
+        return predictedState
 
-    def __getTransitionMatrixRowIndexForPreviousState(self)->int:
-        '''A mechanism for finding the row related to given state in transition matrix'''
-        return None
 
 

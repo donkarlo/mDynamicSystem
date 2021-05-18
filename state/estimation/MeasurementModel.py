@@ -1,4 +1,4 @@
-from mMath.linearalgebra import Vector
+from mMath.linearAlgebra import Vector
 from mDynamicSystem.state import State
 from mDynamicSystem.measurement import Measurement
 import abc

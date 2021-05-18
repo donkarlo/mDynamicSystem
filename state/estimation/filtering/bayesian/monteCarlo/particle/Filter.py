@@ -5,7 +5,7 @@ from mMath.data.probability.continous.Gaussian import Gaussian
 from mMath.data.probability.discrete.Pdf import Pdf
 from mDynamicSystem.state.State import State
 from mDynamicSystem.measurement.Measurement import Measurement
-from mMath.linearalgebra.Matrix import Matrix
+from mMath.linearAlgebra.matrix.Matrix import Matrix
 
 
 class Filter(MainFilter):
@@ -16,7 +16,7 @@ class Filter(MainFilter):
         '''
 
         :param numberOfParticles:int
-        :param processNoiseCovarianceMatrix:Matrix
+        :param processNoiseCovarianceMatrix:matrix
         :param measuremetNoiseCovarianceMatrix
         '''
         #particle related settings

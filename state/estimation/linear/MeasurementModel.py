@@ -1,7 +1,7 @@
 from mDynamicSystem.state.estimation.MeasurementModel import MeasurementModel
 from mDynamicSystem.state.estimation.filtering.bayesian.linear.kalman import Innovation
-from mMath.linearalgebra import Vector
-from mMath.linearalgebra.Matrix import Matrix
+from mMath.linearAlgebra import Vector
+from mMath.linearAlgebra.matrix.Matrix import Matrix
 from mDynamicSystem.state import State
 from mDynamicSystem.measurement import Measurement
 

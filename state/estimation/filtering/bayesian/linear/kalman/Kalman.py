@@ -42,7 +42,7 @@ class Kalman(Filter):
     2. The more x0Post is unceratin the larger poPost should be
 
 
-    f:Process Matrix, b:Control Matrix, q:Process Noise Cov Matrix, h:Observation Matrix, r:Observation Noise Cov Matrix
+    f:Process matrix, b:Control matrix, q:Process Noise Cov matrix, h:Observation matrix, r:Observation Noise Cov matrix
     self._r = r
     self._h = h
     self._q = q
@@ -89,7 +89,7 @@ class Kalman(Filter):
 
     def __getCurrentPriorEstimatedState(self, prevPostEstimatedState: State, prevControl) -> State:
         '''x^{^-}_{k}=Fx^{^+}_{k-1}+Bu_{k-1}'''
-        predictedPreX = self.__processModel.getCurrentState(prevPostEstimatedState, prevControl)
+        predictedPreX = self.__processModel.getPredictedState(prevPostEstimatedState, prevControl)
         return predictedPreX
 
     def __getCurrentPriorStateErrorCov(self, previousPosteriorStateErrorCov) -> Matrix:

@@ -3,8 +3,8 @@ from typing import List
 from mDynamicSystem.state.estimation.Estimation import Estimation
 from mMath.calculus.SingleDefiniteIntegral import SingleDefiniteIntegral
 from mMath.data.probability.continous.Gaussian import Gaussian
-from mMath.linearalgebra.Matrix import Matrix
-from mMath.linearalgebra.Vector import Vector
+from mMath.linearAlgebra.matrix.Matrix import Matrix
+from mMath.linearAlgebra.Vector import Vector
 from mDynamicSystem.state.Serie import Serie as StatesSerie
 from mDynamicSystem.measurement.Measurement import Measurement
 from mDynamicSystem.measurement.MeasurementsSerie import MeasurementsSerie

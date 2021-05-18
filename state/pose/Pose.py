@@ -1,4 +1,4 @@
-from mMath.linearalgebra.Vector import Vector
+from mMath.linearAlgebra.Vector import Vector
 
 
 class Pose(Vector):

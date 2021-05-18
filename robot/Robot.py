@@ -1,13 +1,13 @@
 from typing import List
 
 from mDynamicSystem.robot.actuator.Actuator import Actuator
-from mDynamicSystem.sensor import Sensor
-from mDynamicSystem.state.estimation.ProcessModel import ProcessModel
+from mDynamicSystem.robot.sensor import Sensor
+from mDynamicSystem.state.estimation.processModel.ProcessModel import ProcessModel
 
 
 class robot:
     ''''''
-    def __init__(self,sensors:List[Sensor],actuator:List[Actuator],processModel:ProcessModel):
+    def __init__(self, sensors:List[Sensor], actuator:List[Actuator], processModel:ProcessModel):
         '''
 
         :param sensors:
