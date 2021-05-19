@@ -3,9 +3,9 @@ from typing import List
 from mDynamicSystem.state.estimation.Estimation import Estimation
 from mMath.calculus.SingleDefiniteIntegral import SingleDefiniteIntegral
 from mMath.data.probability.continous.Gaussian import Gaussian
+from mMath.data.timeSerie.stochasticProcess.state.Serie import Serie as StateSerie
 from mMath.linearAlgebra.matrix.Matrix import Matrix
 from mMath.linearAlgebra.Vector import Vector
-from mDynamicSystem.state.Serie import Serie as StatesSerie
 from mDynamicSystem.measurement.Measurement import Measurement
 from mDynamicSystem.measurement.MeasurementsSerie import MeasurementsSerie
 
@@ -44,7 +44,7 @@ class Filter(Estimation):
         # Estimations improve by receiving more measurement
         self.__measurementsSerie: MeasurementsSerie = None
         #History of states
-        self._statesSerie: StatesSerie = None
+        self._statesSerie: StateSerie = None
         # p(x_k|z_{1:k-1})
         self._prior: float = None
         # p(x_k|z_{1:k}) = \frac{p(z_k|x_k)p(x_k|z_{1:k-1})}/{p(z_k|z_{1:k-1})}

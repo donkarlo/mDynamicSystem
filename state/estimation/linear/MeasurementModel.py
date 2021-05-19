@@ -1,4 +1,4 @@
-from mDynamicSystem.state.estimation.MeasurementModel import MeasurementModel
+from mDynamicSystem.state.measurement.Model import Model
 from mDynamicSystem.state.estimation.filtering.bayesian.linear.kalman import Innovation
 from mMath.linearAlgebra import Vector
 from mMath.linearAlgebra.matrix.Matrix import Matrix
@@ -6,7 +6,7 @@ from mDynamicSystem.state import State
 from mDynamicSystem.measurement import Measurement
 
 
-class MeasurementModel(MeasurementModel):
+class MeasurementModel(Model):
     '''z_k=Hx_{k}+v_{k}, v_{k}~N(0,R)
 
     '''

@@ -1,13 +1,13 @@
 import abc
 
 from mDynamicSystem.state.State import State
-from mDynamicSystem.state.estimation.MeasurementModel import MeasurementModel
+from mDynamicSystem.state.measurement.Model import Model
 from mDynamicSystem.measurement.Measurement import Measurement
 
 
 class Sensor:
     def __init__(self
-                 ,measurementModel:MeasurementModel):
+                 , measurementModel:Model):
         '''
 
         :param measurementModel:
