@@ -29,6 +29,13 @@ class Model(abc.ABCMeta):
     def getMeasurement(self) -> Measurement:
         pass
 
+    @abc.abstractmethod
+    def getMeasurementWithoutNoise(self)->Measurement:
+        pass
+
+    def updateState(self,newState:State):
+        self._state = newState
+
     def getState(self)->State:
         return self._state
 

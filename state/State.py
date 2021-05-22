@@ -6,5 +6,15 @@ class State(MainState):
     """"""
 
     def __init__(self,  refVec:Vector):
-        """"""
-        self.__refVec = refVec
+        '''
+
+        :param refVec:
+        '''
+        self.__refVec:Vector = refVec
+
+    def getRefVec(self)->Vector:
+        '''
+
+        :return:
+        '''
+        return self.__refVec

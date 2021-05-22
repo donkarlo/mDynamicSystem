@@ -32,7 +32,6 @@ class TransitionMatrix(MainTransitionMatrix):
         if self.__transitionMatrix is None:
             for npRowInputData in self.__inputDate.getNpRows():
                 pass
-
         return self.__transitionMatrix
 
 

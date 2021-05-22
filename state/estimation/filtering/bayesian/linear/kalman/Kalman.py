@@ -10,12 +10,12 @@ from mDynamicSystem.state.estimation.linear import ProcessModel
 
 class Kalman(Filter):
     """
-    process model: x_k=Fx_{k-1}+Bu_{k-1}+w_k, F:State transition matrix, B: Control-Input matrix
+    process processModel: x_k=Fx_{k-1}+Bu_{k-1}+w_k, F:State transition matrix, B: Control-Input matrix
     Process noise vector: w_k ~ N(0.Q), Q: Process noise covariance matrix
 
     Paired with
     -----
-    measurement model: z_k=Hx_{k-1}=v_{k}
+    measurement processModel: z_k=Hx_{k-1}=v_{k}
     measurement noise vector: v_k ~ N(0,R), R: measurement noise cov matrix
 
     Notation
@@ -89,7 +89,7 @@ class Kalman(Filter):
 
     def __getCurrentPriorEstimatedState(self, prevPostEstimatedState: State, prevControl) -> State:
         '''x^{^-}_{k}=Fx^{^+}_{k-1}+Bu_{k-1}'''
-        predictedPreX = self.__processModel.getPredictedState(prevPostEstimatedState, prevControl)
+        predictedPreX = self.__processModel.getNextState(prevPostEstimatedState, prevControl)
         return predictedPreX
 
     def __getCurrentPriorStateErrorCov(self, previousPosteriorStateErrorCov) -> Matrix:

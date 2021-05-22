@@ -1,7 +1,7 @@
 import abc
 from mDynamicSystem.control import InputsSerie
 from mDynamicSystem.state.State import State
-from mDynamicSystem.measurement import MeasurementsSerie
+from mDynamicSystem.measurement import MeasurementSerie
 
 
 class Estimation(metaclass=abc.ABCMeta):
@@ -12,7 +12,7 @@ class Estimation(metaclass=abc.ABCMeta):
     def __init__(self
                  , currentState:State
                  , inputControlsSerie:InputsSerie
-                 , measurementsSerie: MeasurementsSerie
+                 , measurementsSerie: MeasurementSerie
                  ):
         '''
         :param currentState:State
@@ -21,7 +21,7 @@ class Estimation(metaclass=abc.ABCMeta):
         '''
         self.__currentState = currentState
         self.__inputControlsSerie = inputControlsSerie
-        self.__measurementsSerie = measurementsSerie
+        self._measurementSerie = measurementsSerie
     @abc.abstractmethod
     def getEstimatedState(self)->State:
         pass

@@ -17,18 +17,18 @@ class Model(metaclass=abc.ABCMeta):
         :param previousNoise:Vector it is independent and identically distributed
         :param timeStep: Note really important since we tag data in this class withh current and previous. The numer of measurement in measurement order, thats whu it should be integer. For example if between measurement 2 and three 2- secs wasted, between 4 and five can take 50 seconds and still timeInstance is 5.
         '''
-        self.__previousState: State = previousState
-        self.__currentControlInput:Vector = currentControlInput
-        self.__previousNoise:Vector = previousNoise
-        self.__timeStep: int = timeStep
+        self._previousState: State = previousState
+        self._currentControlInput:Vector = currentControlInput
+        self._previousNoise:Vector = previousNoise
+        self._timeStep: int = timeStep
 
     @abc.abstractmethod
-    def getPredictedState(self) -> State:
+    def getNextState(self) -> State:
         pass
 
     def getPreviousState(self)->State:
-        return self.__previousState
+        return self._previousState
 
     def getPreviousNoise(self):
-        return self.__previousNoise
+        return self._previousNoise
 

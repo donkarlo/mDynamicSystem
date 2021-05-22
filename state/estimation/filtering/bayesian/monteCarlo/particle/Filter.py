@@ -1,43 +1,70 @@
+from typing import List
+
 from mDynamicSystem.state.estimation.filtering.bayesian.Filter import Filter as MainFilter
 from mDynamicSystem.state.estimation.filtering.bayesian.monteCarlo.particle.Particle import Particle
-from mMath.data.probability.Event import Event
-from mMath.data.probability.continous.Gaussian import Gaussian
+from mDynamicSystem.state.estimation.filtering.bayesian.multilevel.mjpf.ProcessModel import ProcessModel
+from mDynamicSystem.state.estimation.linear.MeasurementModel import MeasurementModel
+from mMath.data.probability.continous.uniform.Uniform import Uniform
+from mMath.data.probability.event.Event import Event
+from mMath.data.probability.continous.gaussian.Gaussian import Gaussian
 from mMath.data.probability.discrete.Pdf import Pdf
 from mDynamicSystem.state.State import State
 from mDynamicSystem.measurement.Measurement import Measurement
+from sympy import DiracDelta
+from mMath.linearAlgebra.Vector import Vector
+import abc
+
 from mMath.linearAlgebra.matrix.Matrix import Matrix
 
 
-class Filter(MainFilter):
+class Filter(MainFilter, abc.ABCMeta):
     '''
-    - both linear and nonlinear process and measurement models can be used
+    - Both linear and nonlinear process and measurement models can be used
     '''
-    def __init__(self,numberOfParticles:int,processNoiseCovarianceMatrix:Matrix,measuremetNoiseCovarianceMatrix:Matrix):
+    @abc.abstractmethod
+    def _drawParticles(self):
+        '''Take a sample from the predicted state'''
+        pass
+    def __init__(self
+                 , intrestedRegion:Matrix
+                 , startingState:State
+                 , processModel:ProcessModel
+                 , measurementModel:MeasurementModel
+                 , particlesNum:int):
         '''
 
-        :param numberOfParticles:int
+        :param interestedRegion:Matrix The region at which we want to know to what probability by which the agent is there
+        :param particlesNum:int
         :param processNoiseCovarianceMatrix:matrix
-        :param measuremetNoiseCovarianceMatrix
+        :param measuremetModel
         '''
+        super().__init__(intrestedRegion
+                         ,startingState
+                         ,processModel
+                         ,measurementModel)
         #particle related settings
-        self.__numberOfParticles = numberOfParticles
+        self._particlesNum = particlesNum
 
-        #sensor related settings
-        self.__processNoiseCovarianceMatrix:Matrix = processNoiseCovarianceMatrix
-        self.__measuremetNoiseCovarianceMatrix:Matrix = measuremetNoiseCovarianceMatrix
+        # In-bulit application
+        self._particles:List[Particle] = []
+        self._initiateParticles()
 
-        #
-        self.__particles = None
-        self.__currentMeasurement:Measurement = None
-        self.__previousMeasurement:Measurement = None
+    def _initiateParticles(self):
+        samples: Matrix = Uniform.getSamples(self._particlesNum)
+        weight = 1 / self._particlesNum
+        for sampleNpRow in samples.getNpRows():
+            sampleVec = Vector(sampleNpRow)
+            self._particles.append(Particle(sampleVec, weight, self._measurementSerie.getLength()))
 
     def _onAddMeasurement(self, measurement:Measurement):
-        self.__previousMeasurement = self.__currentMeasurement
-        self.__currentMeasurement = measurement
-
+        self._drawParticles()
 
     def _getParticleWeightByParticle(self, particle: Particle):
-        ''''''
+        '''
+
+        :param particle:
+        :return:
+        '''
         pdf = Pdf()
         lastMeasurementEvent:Measurement = Event(self.getMeasurementsSerie().getLastMeasurement())
         lastStateEvent:State = Event(self.getStatesSerie().getStateEvents())
@@ -66,37 +93,27 @@ class Filter(MainFilter):
     def getPredictedMeasurementByState(self,state:State)->float:
         pass
 
-    def _updatePosterior(self) ->float:
+    def subtractBaseDiracDelta(self,point:Vector,particle:Particle):
         '''
-        - particle filter approximates the pdf representing the posterior by a discrete pdf such that there are minimal
-            restrictions on the models involved. The optimal Bayesian solution is approximated by a sum of weighted
-            samples:
-        - p(x_{0:k}|z_{1:k}) = sum_{1}^{N_s}w^{i}_{k}dirac(x_{0:k}-x_^{i}_{0:k}), sum(w_k^i)=1
+
+        :param point:
+        :param particle:
+        :return:
         '''
-        if self.__particles is not None:
-            sum = 0
-            particle:Particle
-            for particle in self.__particles:
-                sum += particle.getWeight()*self.dirac(self._statesSerie.getStateEvents() - particle.getState())
-        return sum
+        return DiracDelta(point.getDistanceFrom(particle.getState()))
 
-    def dirac(self,x):
-        if x==0:
-            return 99999999999999999999999999
-        return 0
-
-    def _updateMarginalLikelihood(self) -> float:
+    def _updateIntrestedRegionMarginalLikelihood(self) -> float:
         '''
         :return:
         '''
         pdf:Pdf = Pdf()
         likelihoodSum: float = 0
         stateCounter = 0
-        for state in self._statesSerie:
+        for state in self._stateSerie:
             likelihoodSum += pdf.getValueByEvent(
-                Event(self.__measurementsSerie.getLastMeasurement()).conditionedOn(state)) \
+                Event(self._measurementSerie.getLastMeasurement()).conditionedOn(state)) \
                              * pdf.getValueByEvent(Event(state).conditionedOn(
-                self.__measurementsSerie.getObservationSlice(0, self.__measurementsSerie.getLastObservationIndex() - 1)))
+                self._measurementSerie.getMeasurementSlice(0, self._measurementSerie.getLastMeasurementIndex() - 1)))
             stateCounter += 1
         self._marginalLikelihood = likelihoodSum
 
