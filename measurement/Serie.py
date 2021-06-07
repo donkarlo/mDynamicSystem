@@ -3,21 +3,21 @@ from typing import List
 from mDynamicSystem.measurement.Measurement import Measurement
 
 
-class MeasurementSerie():
+class Serie():
     """A time serie of measurement vectors
     """
 
-    def __init__(self, measurement:List[Measurement]):
+    def __init__(self, measurements:List[Measurement]=None):
         ''''''
-        self.__measurements = measurement
+        self._measurementList = measurements if measurements is not None else []
 
     def getByMeasurementByIndex(self, index: int) -> int:
         ''''''
-        return self.__measurements[index]
+        return self._measurementList[index]
 
-    def getMeasurements(self)->List[Measurement]:
+    def getMeasurementList(self)->List[Measurement]:
         ''''''
-        return self.__measurements
+        return self._measurementList
 
     def getLastMeasurement(self)->Measurement:
         ''''''
@@ -25,11 +25,14 @@ class MeasurementSerie():
 
     def getMeasurementSlice(self, startIndex, endIndex)->List[Measurement]:
         ''''''
-        return self.__measurements[startIndex:endIndex]
+        return self._measurementList[startIndex:endIndex]
 
     def getLastMeasurementIndex(self):
         ''''''
-        return len(self.__measurements) - 1
+        return len(self._measurementList) - 1
 
     def getLength(self):
-        return len(self.__measurements)
+        return len(self._measurementList)
+
+    def appendMeasurement(self, measurement: Measurement) -> None:
+        self._measurementList.append(measurement)

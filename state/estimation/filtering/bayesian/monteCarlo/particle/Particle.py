@@ -5,7 +5,7 @@ from mDynamicSystem.state.State import State
 
 class Particle:
     def __init__(self
-                 , state: float
+                 , state: State
                  , weight: float
                  , timeStep: int
                  ):

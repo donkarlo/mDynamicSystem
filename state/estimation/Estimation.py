@@ -1,7 +1,7 @@
 import abc
 from mDynamicSystem.control import InputsSerie
 from mDynamicSystem.state.State import State
-from mDynamicSystem.measurement import MeasurementSerie
+from mDynamicSystem.measurement import Serie
 
 
 class Estimation(metaclass=abc.ABCMeta):
@@ -12,7 +12,7 @@ class Estimation(metaclass=abc.ABCMeta):
     def __init__(self
                  , currentState:State
                  , inputControlsSerie:InputsSerie
-                 , measurementsSerie: MeasurementSerie
+                 , measurementsSerie: Serie
                  ):
         '''
         :param currentState:State
@@ -23,5 +23,6 @@ class Estimation(metaclass=abc.ABCMeta):
         self.__inputControlsSerie = inputControlsSerie
         self._measurementSerie = measurementsSerie
     @abc.abstractmethod
-    def getEstimatedState(self)->State:
+    def getPosteriors(self)->State:
+        '''Get posteriors on state space'''
         pass

@@ -8,3 +8,6 @@ class Measurement:
     def __init__(self, refVec: Vector, time: float = None):
         self.__refVec = refVec
         self.__time = time
+
+    def getRefVec(self):
+        return self.__refVec

@@ -89,7 +89,7 @@ class Kalman(Filter):
 
     def __getCurrentPriorEstimatedState(self, prevPostEstimatedState: State, prevControl) -> State:
         '''x^{^-}_{k}=Fx^{^+}_{k-1}+Bu_{k-1}'''
-        predictedPreX = self.__processModel.getNextState(prevPostEstimatedState, prevControl)
+        predictedPreX = self.__processModel.getNextMostProbableState(prevPostEstimatedState, prevControl)
         return predictedPreX
 
     def __getCurrentPriorStateErrorCov(self, previousPosteriorStateErrorCov) -> Matrix:

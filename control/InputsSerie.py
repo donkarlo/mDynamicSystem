@@ -1,6 +1,6 @@
 from typing import List
 
-from mDynamicSystem.control import Input
+from mDynamicSystem.control.Input import Input
 
 
 class InputsSerie():
@@ -8,10 +8,10 @@ class InputsSerie():
     """
 
     def __init__(self, actionList:List[Input]):
-        self.__actionList = actionList
+        self.__inputList = actionList
 
-    def getByIdx(self, index: int) -> int:
-        return self.__actionList[index]
+    def getByIndex(self, index: int) -> int:
+        return self.__inputList[index]
 
     def getActionsList(self):
-        return self.__actionList
+        return self.__inputList

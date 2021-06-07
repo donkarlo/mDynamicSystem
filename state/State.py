@@ -10,6 +10,7 @@ class State(MainState):
 
         :param refVec:
         '''
+        super().__init__()
         self.__refVec:Vector = refVec
 
     def getRefVec(self)->Vector:

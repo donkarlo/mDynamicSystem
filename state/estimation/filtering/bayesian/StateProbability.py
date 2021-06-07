@@ -10,5 +10,8 @@ class StateProbability:
         :param state:
         :param probability:
         '''
-        self.__state:State = state
-        self.__probability = probability
+        self._state:State = state
+        self._probability = probability
+
+    def updateProbability(self,probability:float):
+        self._probability = probability

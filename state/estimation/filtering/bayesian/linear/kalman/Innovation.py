@@ -1,11 +1,10 @@
-from linearalgebra import Matrix, Vector
-from pgm.dag.dbn.tstbn.mjpf.abnormality.StrategyInterface import StrategyInterface as AbnormalityStrategy
-
-from mDynamicSystem.state import Observation
+from mDynamicSystem.measurement.Measurement import Measurement
 from mDynamicSystem.state import State
+from mMath.linearAlgebra.Vector import Vector
+from mMath.linearAlgebra.matrix.Matrix import Matrix
 
 
-class Innovation(AbnormalityStrategy):
+class Innovation:
     '''y^{~}_{k} = z_k-Hx^{^-}_{k}
 
     Parameters
@@ -18,7 +17,7 @@ class Innovation(AbnormalityStrategy):
 
     def __init__(self
                  , processMatrix: Matrix
-                 , currentObservation: Observation
+                 , currentObservation: Measurement
                  , priorCurrentEstimatedState: State):
         self._processMatrix = processMatrix
         self.__currentObservation = currentObservation

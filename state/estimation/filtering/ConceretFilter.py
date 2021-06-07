@@ -3,15 +3,11 @@ from typing import List
 from mDynamicSystem.state.estimation.Estimation import Estimation
 from mMath.calculus.SingleDefiniteIntegral import SingleDefiniteIntegral
 from mMath.data.probability.continous.gaussian.Gaussian import Gaussian
-from mMath.data.timeSerie.stochasticProcess.state.Serie import Serie as StateSerie
 from mMath.data.timeSerie.stochasticProcess.state.State import State
 from mMath.linearAlgebra.matrix.Matrix import Matrix
 from mMath.linearAlgebra.Vector import Vector
-from mDynamicSystem.measurement.Measurement import Measurement
-from mDynamicSystem.measurement.MeasurementSerie import MeasurementSerie
-from mDynamicSystem.state.estimation.filtering.bayesian.StateProbability import StateProbability
 
-class ConceretFilter(Estimation):
+class ConceretFilter(Estimation,abc.ABCMeta):
     '''
     - Is an estimation as the following:
     - Bayesian inference allows for estimating a state by combining a statistical processModel for a measurement (likelihood)
@@ -27,18 +23,18 @@ class ConceretFilter(Estimation):
     '''
 
 
-    def __init__(self,intrestedRegion:Matrix,startingState:State):
+    def __init__(self, intrestedRegion:Matrix, startingState:State):
         super().__init__(intrestedRegion,startingState)
 
-    def _updateIntrestedRegionStatePriors(self)->None:
+    def _updatePriors(self)->None:
         self._intrestedRegionStatePriors = SingleDefiniteIntegral('p(x_k|x_{k-1})*p(x_{k-1}|z_{1:k-1})', 'dx_{k-1}',
                                                    [-9999999999999,999999999999]).getValue()
 
 
-    def _updateIntrestedRegionStatePosteriors(self)->None:
+    def _updatePosteriors(self)->None:
         self._interestedRegionPosteriors = self._getIntrestedRegionStatePriors() * ((self._updateIntrestedRegionLikelihoods) / self._getMarginalLikelihood())
 
-    def _updateIntrestedRegionMarginalLikelihood(self) -> float:
+    def _updateMarginalLikelihood(self) -> float:
         expectedMeasurment:List = self._getExpectedMeasurment()
         actualMeasurment:List = self.getMeasurementsSerie().getLastMeasurement()
         mean:Vector=Vector([expectedMeasurment,actualMeasurment])
