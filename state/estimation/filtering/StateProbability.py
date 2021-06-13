@@ -15,3 +15,9 @@ class StateProbability:
 
     def updateProbability(self,probability:float):
         self._probability = probability
+
+    def getProbability(self)->float:
+        return self._probability
+
+    def getState(self):
+        return self._state

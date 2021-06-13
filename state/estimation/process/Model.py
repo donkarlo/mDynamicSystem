@@ -9,8 +9,8 @@ class Model(metaclass=abc.ABCMeta):
     '''Process Model: represents  x_k=f_k(x_{k_1},u_k,v_{k-1}) where f is an object of this class'''
     def __init__(self
                  , previousState: State = None
+                 , previousNoisePdf: Pdf = None
                  , currentControlInput: Vector = None
-                 , previousNoisePdf:Pdf = None
                  , timeStep:int =None):
         '''
 
@@ -24,32 +24,37 @@ class Model(metaclass=abc.ABCMeta):
         self._previousNoisePdf = previousNoisePdf
         self._timeStep: int = timeStep
 
-        self._previousNoiseSample = None
-        self._nextStateWithoutNoise = None
-
     @abc.abstractmethod
-    def getNextStateWithoutNoise(self)->State:
+    def _getPredictedStateRefVecWithoutNoise(self)->Vector:
+        pass
+
+
+    def getPredictedState(self)->State:
         '''
         When we say nextState, it means that control is already encoded inside
         :return:
         '''
-        pass
+        sampleNoiseVector = self.__getASampleNoise()
+        predictedStateRefVecWithoutNoise = self._getPredictedStateRefVecWithoutNoise()
+        return State(sampleNoiseVector,predictedStateRefVecWithoutNoise)
 
-    def update(self
+    def __getASampleNoise(self)->Vector:
+        '''
+
+        :return:
+        '''
+        return self._previousNoisePdf.getASample()
+
+    def updatePreviousState(self
                , previousState: State
-                 , currentControlInput: Vector
-                 , previousNoisePdf:Pdf
                  , timeStep:int =None):
         self._previousState: State = previousState
-        self._currentControlInput: Vector = currentControlInput
-        self._previousNoisePdf = previousNoisePdf
         self._timeStep: int = timeStep
+
+
 
     def getCurrentControlInput(self)->Vector:
         return self._currentControlInput
-
-    def getNextMostProbableState(self) -> State:
-        return self.getNextStateWithoutNoise()+self.getPreviousNoise()
 
     def getPreviousState(self)->State:
         '''

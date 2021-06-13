@@ -23,6 +23,10 @@ class Serie():
         ''''''
         return self.getByMeasurementByIndex(self.getLastMeasurementIndex())
 
+    def getFirstMeasurement(self):
+        ''''''
+        return self.getByMeasurementByIndex(0)
+
     def getMeasurementSlice(self, startIndex, endIndex)->List[Measurement]:
         ''''''
         return self._measurementList[startIndex:endIndex]
@@ -31,7 +35,7 @@ class Serie():
         ''''''
         return len(self._measurementList) - 1
 
-    def getLength(self):
+    def getLength(self)->int:
         return len(self._measurementList)
 
     def appendMeasurement(self, measurement: Measurement) -> None:

@@ -3,11 +3,10 @@ from mDynamicSystem.state.measurement.decorator.Decorator import Decorator
 
 
 class StateMorph(Decorator):
-    def getMeasurementWithoiutNoise(self) -> Measurement:
+    def getMeasurementRefVecWithoutNoise(self) -> Measurement:
         '''
 
         :return:
         '''
         measurementVector = self._state.getRefVec()
-        measurement = Measurement(measurementVector)
-        return measurement
+        return measurementVector

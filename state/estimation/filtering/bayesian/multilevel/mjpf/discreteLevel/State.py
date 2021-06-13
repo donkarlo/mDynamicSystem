@@ -2,7 +2,7 @@ from mMath.data.timeSerie.stochasticProcess.state.State import State
 from mMath.linearAlgebra.Vector import Vector
 
 
-class SuperState(State):
+class State(State):
     def __init__(self,center:Vector,standardDeviation:Vector):
         '''
 

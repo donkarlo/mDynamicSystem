@@ -3,14 +3,14 @@ from typing import List
 
 from mDynamicSystem.state.State import State
 from mDynamicSystem.state.estimation.Estimation import Estimation
-from mMath.data.probability.Pdf import Pdf
+from mDynamicSystem.state.estimation.filtering.StateSpaceProbabilities import StateSpaceProbabilities
 from mMath.data.timeSerie.stochasticProcess.state.Serie import Serie as StateSerie
 from mDynamicSystem.measurement.Measurement import Measurement
 from mDynamicSystem.measurement.Serie import Serie
-from mDynamicSystem.state.estimation.filtering.bayesian.StateProbability import StateProbability
+from mDynamicSystem.state.estimation.filtering.StateProbability import StateProbability
 from mDynamicSystem.state.estimation.process.Model import Model as ProcessModel
 from mDynamicSystem.state.measurement.Model import Model as MeasurementModel
-from mMath.data.timeSerie.stochasticProcess.state.StateSet import StateSet
+from mMath.data.timeSerie.stochasticProcess.state.StateSpace import StateSpace
 
 
 class Filter(Estimation,abc.ABCMeta):
@@ -29,13 +29,13 @@ class Filter(Estimation,abc.ABCMeta):
     '''
 
     def __init__(self
-                 , stateSet:StateSet
+                 , stateSpace:StateSpace
                  , startingState:State
                  , processModel:ProcessModel
                  , measurementModel:MeasurementModel
                  ):
-        #
-        self._stateSet:StateSet = stateSet
+        #contains all states we are intrested to follow their posteriors
+        self._stateSpace:StateSpace = stateSpace
         #
         self._startingState = startingState
         #
@@ -47,29 +47,23 @@ class Filter(Estimation,abc.ABCMeta):
         #History of states
         self._stateSerie: StateSerie = None
         self._stateSerie.appendState(self._startingState)
+        # Contains stateSet probabilities derived from process model without considering observation
         # p(x_k|z_{1:k-1})
-        self._priors: List[StateProbability] = []
+        self._stateSpacePriorProbabilities: StateSpaceProbabilities = []
+        #contains stateSet probabilities after withnessing an area covered by a
         # p(x_k|z_{1:k}) = \frac{p(z_k|x_k)p(x_k|z_{1:k-1})}/{p(z_k|z_{1:k-1})}
         # Posterior should hold the points in region of intrest plus the probability that agent is in each of those points
         # To store the probabilities by which the agent may reside in each region in region of interest
-        self._posteriors: List[StateProbability] = []
+        self._stateSpacePosteriorProbabilities: StateSpaceProbabilities = []
         #
-        self._measurementsLikelihoods:List = None
+        self._likelihoods:List = None
         # @see self._getMarginalLikelihood()
-        self._marginalMeasurementsLikelihood: float = None
+        self._marginalLikelihood: float = None
 
     @abc.abstractmethod
-    def _onAddMeasurement(self, measurement: Measurement):
+    def _predictStateSpacePriorProbabilities(self):
         '''
-
-        :param measurement:
-        :return:
-        '''
-        pass
-
-    @abc.abstractmethod
-    def _updatePriors(self)->None:
-        '''
+        - Predict for states in state space using process model
         - Predict probability of presence in every state set member at a time instant
         - The prior represents the best guess at time k given measurements up to time k − 1. It can be interpreted as the
             predicted state at time k.
@@ -79,11 +73,10 @@ class Filter(Estimation,abc.ABCMeta):
         :return:
         '''
         pass
-
     @abc.abstractmethod
-    def _updatePosteriors(self) -> None:
+    def _updateStateSpacePosteriorProbabilities(self):
         '''
-        - Update  probability of presence in every state set member at a time instant
+        - Update  probability of presence in every state in state space at a time instant after having the measurement and the neigbourhood its noise makes for it
         - This is the result we expect to recieve from any estimation
         - p(x_k|z_{1:k}) = (p(z_k|x_k)p(x_k|z_{1:k-1}))/(p(z_k|z_{1:k-1}))
         - Calculate p(x_{k}|u_{1:k},z_{1:k})
@@ -96,15 +89,22 @@ class Filter(Estimation,abc.ABCMeta):
         :return:
         '''
         pass
+    def getMaximumPosteriorStateProbability(self)->StateProbability:
+        maxStateProbability:StateProbability
+        loopingStateProbability:StateProbability
+        for loopingStateProbability in self._stateSpacePosteriorProbabilities:
+            if loopingStateProbability.getProbability()>maxStateProbability.getProbability():
+                maxStateProbability = loopingStateProbability
+        return maxStateProbability
 
-    @abc.abstractmethod
+
     def _updateLikelihoods(self) -> float:
         '''A knowledge which we aquire from characterstics of the sensor.
         If expected expectedMeasurment coicides with actualMeasurment then the highest weight is gained
         p(z_k|x_{1,k})
         '''
 
-    def addMeasurement(self, measurement: Measurement) -> None:
+    def appendMeasurement(self, measurement: Measurement) -> None:
         '''
         Anytime a new measurement is added, the the system can update its state(a random variable) belief (a PDF over
         the state random variable which quantifies uncertainty of being in that state)
@@ -112,18 +112,15 @@ class Filter(Estimation,abc.ABCMeta):
         :return:
         '''
         self._measurementSerie.appendMeasurement(measurement)
-        self._onAddMeasurement(measurement)
-
-        #prediction phase using process model: the next state probabilities for intrested rgion points based on previous state using the process model
-        #Such as transition matrix
-        self._updatePriors()
-        #update phase: refining the prediction phase prediction  using the new observation
-        self._updatePosteriors()
+        #predict for all states in stateSet
+        self._predictStateSpacePriorProbabilities()
+        #update aformentioned prediction of all states in StateSet
+        self._updateStateSpacePosteriorProbabilities()
 
     def _updateMarginalLikelihood(self):
         '''A knowledge which we aquire from characterstics of the sensor.
         If expected expectedMeasurment coicides with actualMeasurment then the highest weight is gained
-        p(z_k|x_{1,k})
+        p(z_k|z_{1:k})
         '''
         pass
 
@@ -132,27 +129,29 @@ class Filter(Estimation,abc.ABCMeta):
         '''
         :return:
         '''
-        if self._posteriors is None:
+        if self._stateSpacePosteriorProbabilities is None:
             raise Exception("Add a measuremt first using self.addMeasurement() before calling self.getPosterior")
-        return self._posteriors
+        return self._stateSpacePosteriorProbabilities
 
     def _getPriors(self)->float:
         '''
+        prediction phase using process model: the next state probabilities for intrested rgion points based on previous state using the process model
+        Such as transition matrix
         :return:
         '''
-        if self._priors is None:
+        if self._stateSpacePriorProbabilities is None:
             raise Exception("Add a measuremt first using self.addMeasurement() before calling self._getPrior()")
-        return self._priors
+        return self._stateSpacePriorProbabilities
 
     def getMeasurementLikelihoods(self)->float:
-        return self._measurementsLikelihoods
+        return self._likelihoods
 
     def getMarginalMeasurementsLikelihood(self)->float:
         '''
 
         :return:
         '''
-        return self._marginalMeasurementsLikelihood
+        return self._marginalLikelihood
 
     def getMeasurementsSerie(self)-> Serie:
         '''

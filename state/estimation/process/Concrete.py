@@ -6,7 +6,7 @@ from mMath.linearAlgebra.Vector import Vector
 
 class Concrete(ProcessModel):
     def __init__(self
-                 ,previousState: State = None
+                 , previousState: State = None
                  , currentControlInput: Vector = None
                  , previousNoisePdf:Pdf = None
                  , timeStep:int = None):
@@ -14,3 +14,7 @@ class Concrete(ProcessModel):
                          ,currentControlInput
                          ,previousNoisePdf
                          ,timeStep)
+
+
+    def _getPredictedStateRefVecWithoutNoise(self)->Vector:
+        return None

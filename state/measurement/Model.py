@@ -4,15 +4,15 @@ from mDynamicSystem.state import State
 from mDynamicSystem.measurement import Measurement
 import abc
 
-class Model(abc.ABCMeta):
+class Model(metaclass=abc.ABCMeta):
     '''z_k=h_k(x_k,u_k,n_k)
     - It's duty is to connect a given state to a measurement
     '''
 
     def __init__(self
-                 , state: State
-                 , controlInput: Vector
-                 , noisePdf: Pdf
+                 , state: State = None
+                 , noisePdf: Pdf = None
+                 , controlInput: Vector = None
                  , timeStep:int=None):
         '''
         :param state:
@@ -21,27 +21,24 @@ class Model(abc.ABCMeta):
         :param timeStep:
         '''
         self._state: State = state
+        self._noisePdf: Pdf = noisePdf
         self._controlInput: State = controlInput
-        self._noisePdf:Pdf = noisePdf
         self._timeStep:int = timeStep
 
-        self._measurement:Measurement = None
-        self._lastDarwnNoise = None
 
     @abc.abstractmethod
-    def getMeasurementWithoutNoise(self) -> Measurement:
+    def getMeasurementRefVecWithoutNoise(self) -> Vector:
         pass
 
 
     def getMeasurement(self) -> Measurement:
         ''''''
-        return Measurement(self.getMeasurementWithoutNoise().getRefVec()+self.getASampleNoise())
+        return Measurement(self.getMeasurementRefVecWithoutNoise() + self.__getASampleNoise())
 
 
 
-    def getASampleNoise(self)->float:
-        self._lastDarwnNoise = self._noisePdf.getASample()
-        return self._lastDarwnNoise
+    def __getASampleNoise(self)->Vector:
+        return self._noisePdf.getASample()
 
     def updateState(self,newState:State):
         '''
@@ -58,9 +55,9 @@ class Model(abc.ABCMeta):
         '''
         return self._state
 
-    def getNoise(self)->Vector:
+    def getNoisePdf(self)->Vector:
         '''
 
         :return:
         '''
-        return self._noise
+        return self._noisePdf

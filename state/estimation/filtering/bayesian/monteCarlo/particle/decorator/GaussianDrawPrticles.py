@@ -7,8 +7,6 @@ from mDynamicSystem.state.estimation.filtering.bayesian.monteCarlo.particle.Filt
 
 
 class GaussianDrawParticles(Decorator):
-    def __init__(self,filter:Filter):
-        self._filter = filter
 
     def _getNewParticleStateFromAPdf(self, priorParticleState:State)->State:
         '''

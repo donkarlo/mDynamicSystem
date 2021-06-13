@@ -40,7 +40,7 @@ class ConceretFilter(Estimation,abc.ABCMeta):
         mean:Vector=Vector([expectedMeasurment,actualMeasurment])
         covarianceMatrix:Matrix = None
         pdf = Gaussian(mean,covarianceMatrix)
-        self._intrestedRegionMarginalLikelihood = pdf.getValueByEvent(self.getMeasurementsSerie().getLastMeasurement())
+        self._intrestedRegionMarginalLikelihood = pdf.getValueAt(self.getMeasurementsSerie().getLastMeasurement())
 
     def getLikelihood(self)->float:
         return self._likelihood

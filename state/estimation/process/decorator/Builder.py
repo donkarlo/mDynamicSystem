@@ -1,4 +1,4 @@
-from mDynamicSystem.state.estimation.process.decorator.Concrete import Concrete as ConcereteProcessModel
+from mDynamicSystem.state.estimation.process.Concrete import Concrete as ConcereteProcessModel
 from mDynamicSystem.state.estimation.process.decorator.StateTransitionMatrix import StateTransitionMatrix
 from mMath.data.probability.continous.gaussian.Gaussian import Gaussian as GassianPdf
 from mMath.data.timeSerie.stochasticProcess.state.transitionMatrix.TransitionMatrix import TransitionMatrix
