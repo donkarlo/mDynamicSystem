@@ -1,4 +1,4 @@
-from mDynamicSystem.measurement.Measurement import Measurement
+from mDynamicSystem.obs.Obs import Obs
 from mDynamicSystem.state.estimation.filtering.bayesian.multilevel.mjpf.TrainingMeasurementSerie import \
     TrainingMeasurementSerie
 from mDynamicSystem.state.estimation.filtering.bayesian.multilevel.mjpf.discreteLevel.State import State
@@ -19,9 +19,9 @@ class TransitionMatrix:
         ''''''
 
 
-    def _getMeasurementBelongingState(self, measurement:Measurement)->State:
+    def _getMeasurementBelongingState(self, measurement:Obs)->State:
         '''
-        To which superstate this measurement belongs?
+        To which superstate this obs belongs?
         :param measurement:
         :return:
         '''
@@ -34,7 +34,7 @@ class TransitionMatrix:
                 belongingSuperState = loopingSuperState
                 superStateFoundForMeasurement = True
         if superStateFoundForMeasurement == False:
-            belongingSuperState = self._getStateSpace().getARandomMember()
+            belongingSuperState = self._getStateSpace().getASample()
         return belongingSuperState
 
     def _getStateSerie(self)->StateSerie:
@@ -43,7 +43,7 @@ class TransitionMatrix:
         '''
         if self._stateSerie is None:
             stateSerieBuilder: SerieBuilder = SerieBuilder(self._getStateSpace())
-            loopingOfflineMeasurement: Measurement
+            loopingOfflineMeasurement: Obs
             for loopingOfflineMeasurement in self._trainingMeasurementSerie.getMeasurementList():
                 stateSerieBuilder.appendState(self._getMeasurementBelongingState(loopingOfflineMeasurement))
             self._stateSerie = stateSerieBuilder.getSerie()

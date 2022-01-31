@@ -2,7 +2,7 @@ import abc
 
 from mDynamicSystem.state.State import State
 from mDynamicSystem.state.measurement.Model import Model
-from mDynamicSystem.measurement.Measurement import Measurement
+from mDynamicSystem.obs.Obs import Obs
 
 
 class Sensor:
@@ -15,7 +15,7 @@ class Sensor:
         self.__measurementModel = measurementModel
 
     @abc.abstractmethod
-    def getMeasurementLikelihoodConditionOnState(self,measurement:Measurement,state:State)->float:
+    def getMeasurementLikelihoodConditionOnState(self, measurement:Obs, state:State)->float:
         '''
         p(z_k|x_k)
         :param measurement:

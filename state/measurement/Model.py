@@ -1,12 +1,12 @@
 from mMath.data.probability.Pdf import Pdf
 from mMath.linearAlgebra import Vector
 from mDynamicSystem.state import State
-from mDynamicSystem.measurement import Measurement
+from mDynamicSystem.obs import Obs
 import abc
 
 class Model(metaclass=abc.ABCMeta):
     '''z_k=h_k(x_k,u_k,n_k)
-    - It's duty is to connect a given state to a measurement
+    - It's duty is to connect a given state to a obs
     '''
 
     def __init__(self

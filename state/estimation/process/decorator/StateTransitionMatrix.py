@@ -16,7 +16,7 @@ class StateTransitionMatrix(Decorator):
         super().__init__(model)
         self._model._stateTransitionMatrix:StateTransitionMatrix = stateTransitionMatrix
 
-    def _getPredictedStateRefVecWithoutNoise(self)->State:
+    def _getNextState(self)->State:
         '''
         :return:State
         '''

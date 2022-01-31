@@ -1,20 +1,26 @@
 import numpy as np
 
-from mDynamicSystem.state import Observation
+from mDynamicSystem.obs.Obs import Obs
 
 
-class ThreeDPosVelObs(Observation):
-    def __init__(self, time: float, x: float, y: float, z: float, vx: float, vy: float, vz: float):
+class Obs(Obs):
+    def __init__(self, time: float
+                 , x: float
+                 , y: float
+                 , z: float
+                 , vx: float
+                 , vy: float
+                 , vz: float):
         self.__x = x
         self.__y = y
         self.__z = z
         self.__vx = vx
         self.__vy = vy
         self.__vz = vz
-        obsVector = np.array([self.__x
+        measurementVector = np.array([self.__x
                                  , self.__y
                                  , self.__z
                                  , self.__vx
                                  , self.__vy
                                  , self.__vz])
-        super(ThreeDPosVelObs, self).__init__(time, obsVector)
+        super().__init__(time, measurementVector)

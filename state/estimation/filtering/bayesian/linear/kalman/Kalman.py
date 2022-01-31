@@ -1,22 +1,23 @@
-from linearalgebra import Matrix, Vector
+from mDynamicSystem.obs.Obs import Obs
+from mDynamicSystem.obs.Serie import Serie
+from mDynamicSystem.state.State import State
+from mDynamicSystem.state.estimation.filtering.bayesian.Filter import Filter
+from mDynamicSystem.state.estimation.filtering.bayesian.linear.kalman.Innovation import Innovation
+from mDynamicSystem.state.estimation.process.Model import Model as ProcessModel
+from mDynamicSystem.state.measurement.Model import Model as MeasurementModel
+from mMath.linearAlgebra.Vector import Vector
+from mMath.linearAlgebra.matrix.Matrix import Matrix
 
-import Innovation
-from mDynamicSystem.state import Filter
-from mDynamicSystem.state import ObsModel
-from mDynamicSystem.state import ObsSerie
-from mDynamicSystem.state import State
-from mDynamicSystem.state.estimation.linear import ProcessModel
 
-
-class Kalman(Filter):
+class Kalman:
     """
     process processModel: x_k=Fx_{k-1}+Bu_{k-1}+w_k, F:State transition matrix, B: Control-Input matrix
     Process noise vector: w_k ~ N(0.Q), Q: Process noise covariance matrix
 
     Paired with
     -----
-    measurement processModel: z_k=Hx_{k-1}=v_{k}
-    measurement noise vector: v_k ~ N(0,R), R: measurement noise cov matrix
+    obs processModel: z_k=Hx_{k-1}=v_{k}
+    obs noise vector: v_k ~ N(0,R), R: obs noise cov matrix
 
     Notation
     ---------
@@ -57,14 +58,13 @@ class Kalman(Filter):
     """
 
     def __init__(self
-                 , observationSeri: ObsSerie
-                 , processModel: ProcessModel
-                 , observationModel: ObsModel
-                 , initialEstimatedState: State
-                 , initialStateErrorCov: Matrix) -> None:
-        super().init(observationSeri)
+                 , observationSeri: Serie = None
+                 , processModel: ProcessModel = None
+                 , measurementModel: MeasurementModel = None
+                 , initialEstimatedState: State = None
+                 , initialStateErrorCov: Matrix = None) -> None:
         self.__processModel = processModel
-        self.__observationModel = observationModel
+        self.__observationModel = measurementModel
         self.__initialStateErrorCov = initialStateErrorCov
         self.__initialEstimatedState = initialEstimatedState
 
@@ -115,6 +115,18 @@ class Kalman(Filter):
         kGain = self.__getKolmanGain(currentPriorStateErrorCov)
         CurrentPosteriorEstimatedState = priorCurrentEstimatedState + kGain * innovation.getInnovation()
         return CurrentPosteriorEstimatedState
+    def setMeasurement(self,measurement):
+        print(measurement)
+    def setTimeStep(self,t):
+        print(t)
+    def getPrediction(self):
+        return 1
+    def getObservationModel(self):
+        return 1
+    def getPredictionModel(self):
+        return 1
+    def setControl(self,control):
+        tcontrol=control
 
     def __getCurrentPriorEstimatedState(self
                                         , currentPriorStateErrorCov: Matrix
@@ -129,3 +141,7 @@ class Kalman(Filter):
              * self.__processModel.getProcessMatrix() + innovation.getInnovation()) \
             * self.__getCurrentPriorStateErrorCov()
         return p
+
+
+    def getInnovation(self):
+        return self.getPrediction()-self.getObservationModel()*self.getPredictionModel()

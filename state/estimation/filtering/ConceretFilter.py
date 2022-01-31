@@ -10,14 +10,14 @@ from mMath.linearAlgebra.Vector import Vector
 class ConceretFilter(Estimation,abc.ABCMeta):
     '''
     - Is an estimation as the following:
-    - Bayesian inference allows for estimating a state by combining a statistical processModel for a measurement (likelihood)
+    - Bayesian inference allows for estimating a state by combining a statistical processModel for a obs (likelihood)
         with a prior probability using Bayes’ theorem.
-    - Byesian Filtering is a form of Estimation in which the intersection of measurement distribution and predicted, next
+    - Byesian Filtering is a form of Estimation in which the intersection of obs distribution and predicted, next
         state distribuation makes restricts the answer set
-    - Byesian Filter refine estimates everytime a new measurement is achieved
-    - In each Byesian Filter our goal is to compute the posterior which is state estimation after measurement (self.getPosterior)
+    - Byesian Filter refine estimates everytime a new obs is achieved
+    - In each Byesian Filter our goal is to compute the posterior which is state estimation after obs (self.getPosterior)
     - first we predict () then we observe and update according to what is observed
-    - What is the PDF of state with a given set of measurement
+    - What is the PDF of state with a given set of obs
     - if the variables are normally distributed and the transitions are linear, the Bayes filtering becomes equal to
         the Kalman filtering.
     '''

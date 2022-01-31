@@ -1,24 +1,20 @@
-from random import random
 from typing import List
-
 from mDynamicSystem.state.estimation.filtering.bayesian.Filter import Filter as MainFilter
-from mDynamicSystem.state.estimation.filtering.StateProbability import StateProbability
 from mDynamicSystem.state.estimation.filtering.bayesian.monteCarlo.particle.Particle import Particle
 from mDynamicSystem.state.estimation.linear.MeasurementModel import MeasurementModel
 from mDynamicSystem.state.estimation.process.Model import Model as ProcessModel
 from mDynamicSystem.state.State import State
-from mDynamicSystem.measurement.Measurement import Measurement
+from mDynamicSystem.obs.Obs import Obs
 from sympy import DiracDelta
-
 from mMath.data.probability.Pdf import Pdf
+from mMath.data.probability.continous.gaussian.Gaussian import Gaussian
 from mMath.data.timeSerie.stochasticProcess.state.StateSpace import StateSpace
-from mMath.linearAlgebra.Vector import Vector
 import abc
 
 
-class Filter(MainFilter, abc.ABCMeta):
+class Filter(MainFilter, metaclass=abc.ABCMeta):
     '''
-    - Both linear and nonlinear process and measurement models can be used
+    - Both linear and nonlinear process and obs models can be used
     '''
 
     def __init__(self
@@ -26,7 +22,6 @@ class Filter(MainFilter, abc.ABCMeta):
                  , stateSpace: StateSpace
                  , processModel: ProcessModel
                  , measurementModel: MeasurementModel
-                 , measurementStateLikelihoodPdf:Pdf
                  , startingState:State
                  ):
         '''
@@ -35,7 +30,7 @@ class Filter(MainFilter, abc.ABCMeta):
         :param stateSpace:
         :param processModel:
         :param measurementModel:
-        :param measurementStateLikelihoodPdf:
+        :param predictedStateMeasurementLikelihood:
         :param startingState:
         '''
         super().__init__(stateSpace
@@ -45,7 +40,6 @@ class Filter(MainFilter, abc.ABCMeta):
                          )
         #particle related settings
         self._particlesNum:int = particlesNum
-        self._measurementStateLikelihoodPdf:Pdf = measurementStateLikelihoodPdf
         # In-bulit application
         self._particles:List[Particle] = []
         self._initiateParticles()
@@ -60,42 +54,48 @@ class Filter(MainFilter, abc.ABCMeta):
         for sampleState in sampleStates:
             self._particles.append(Particle(sampleState, weight, self._measurementSerie.getLength()))
 
-    def _drawParticles(self):
-        '''Take a sample from the predicted state'''
+    def _updateParticles(self):
+        '''
+        - Draw a new sample from each particle
+        - Take a sample from the predicted state
+        '''
         loopingParticle: Particle
         for loopingParticle in self._particles:
             #first move the particle state along the process model
-            predictedParticleState:State = self._processModel.getPredictedState(loopingParticle.getState())
+            self._updateParticle(loopingParticle)
 
-            #convert the predicted state to predicted measurement
-            self._measurementModel.updateState(predictedParticleState)
-            predictedMeasurement:Measurement = self._measurementModel.getMeasurement()
+    def updateParticle(self,particle:Particle)->None:
+       particle.updateState(self._getPredictedState(particle.getState()))
+       particle.updateWeight(self._getUpdatedParticleWeight(particle.getState(),particle.getWeight()))
 
-            #the new weight
-            newWeight = loopingParticle.getWeight() * self._measurementStateLikelihoodPdf.getValueAt(predictedMeasurement.getRefVec())
-            #get new weight
-            loopingParticle.update(predictedParticleState, newWeight)
-
-
-    def _predictStateSpacePriorProbabilities(self):
-        '''
-        is implemented in self._drawParticles() which is called by _updateStateSpacePosteriorProbabilities
-        :return:
-        '''
-        pass
-
-
-    def subtractBaseDiracDelta(self,point:Vector,particle:Particle):
+    def _getPredictedState(self, state:State)->State:
         '''
 
-        :param point:
         :param particle:
         :return:
         '''
-        return DiracDelta(point.getDistanceFrom(particle.getState()))
+        predictedParticleState:State = self._processModel.getPredictedState2(state)
+        return predictedParticleState
+
+    def _getUpdatedParticleWeight(self, particleState:State,previousParticleWeight:float)->float:
+        '''
+        - U[dating the likelihood of a particle whenever a new obs is available
+        :return:
+        '''
+        gaussianPdf:Pdf = Gaussian(self.getMeasurementsSerie().getLastMeasurement().getRefVec()
+                               ,self.getMeasurementModel().getNoisePdf().getCovarianceMatrix())
+        newWeight = previousParticleWeight * gaussianPdf.getValueAt(self.__getParticleStateMeasurement(particleState))
+        return newWeight
 
 
-    def _updateStateSpacePosteriorProbabilities(self):
+
+    def __getParticleStateMeasurement(self, state:State)->Obs:
+        # convert the predicted state to predicted obs
+        self._measurementModel.updateState(state)
+        measurement: Obs = self._measurementModel.getMeasurement()
+        return measurement
+
+    def _getStatePosterior(self,state:State) ->float:
         '''
         - Updates posteriors af all points in the region of interest
         - particle filter approximates the pdf representing the posterior by a discrete pdf such that there are minimal
@@ -103,14 +103,11 @@ class Filter(MainFilter, abc.ABCMeta):
             samples:
         - p(x_{0:k}|z_{1:k}) = sum_{1}^{N_s}w^{i}_{k}dirac(x_{k}-x^{i}_{k}), sum(w_k^i)=1
         '''
-        self._drawParticles()
-        state:State
-        for state in self._stateSpace:
-            if self._particles is not None:
-                sum = 0
-                particle:Particle
-                for particle in self._particles:
-                    sum += particle.getWeight()*self.subtractBaseDiracDelta(state,particle.getState())
-                statePosterior:statePosterior = StateProbability()
-            self._stateSpacePosteriorProbabilities.append(statePosterior)
+        self._updateParticles()
+        if self._particles is not None:
+            sum = 0
+            particle:Particle
+            for particle in self._particles:
+                sum += particle.getWeight()*DiracDelta(state.getRefVec()-particle.getState().getRefVec())
+        return sum
 

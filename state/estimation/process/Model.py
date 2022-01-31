@@ -17,7 +17,7 @@ class Model(metaclass=abc.ABCMeta):
         :param previousState:
         :param currentControlInput:
         :param previousNoise:Vector/Pdf it is independent and identically distributed
-        :param timeStep: Note really important since we tag data in this class withh current and previous. The numer of measurement in measurement order, thats whu it should be integer. For example if between measurement 2 and three 2- secs wasted, between 4 and five can take 50 seconds and still timeInstance is 5.
+        :param timeStep: Note really important since we tag data in this class withh current and previous. The numer of obs in obs order, thats whu it should be integer. For example if between obs 2 and three 2- secs wasted, between 4 and five can take 50 seconds and still timeInstance is 5.
         '''
         self._previousState: State = previousState
         self._currentControlInput:Vector = currentControlInput
@@ -25,18 +25,8 @@ class Model(metaclass=abc.ABCMeta):
         self._timeStep: int = timeStep
 
     @abc.abstractmethod
-    def _getPredictedStateRefVecWithoutNoise(self)->Vector:
+    def _getNextState(self)->Vector:
         pass
-
-
-    def getPredictedState(self)->State:
-        '''
-        When we say nextState, it means that control is already encoded inside
-        :return:
-        '''
-        sampleNoiseVector = self.__getASampleNoise()
-        predictedStateRefVecWithoutNoise = self._getPredictedStateRefVecWithoutNoise()
-        return State(sampleNoiseVector,predictedStateRefVecWithoutNoise)
 
     def __getASampleNoise(self)->Vector:
         '''

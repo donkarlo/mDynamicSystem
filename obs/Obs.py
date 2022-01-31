@@ -1,13 +1,13 @@
 from mMath.linearAlgebra.Vector import Vector
 
 
-class Measurement:
+class Obs(Vector):
     """Observation, many observations from different sensors may result in fewer states
     """
 
-    def __init__(self, refVec: Vector, time: float = None):
-        self.__refVec = refVec
+    def __init__(self,time: float,refVecList):
         self.__time = time
+        super().__init__(refVecList)
 
-    def getRefVec(self):
-        return self.__refVec
+    def getTime(self):
+        return self.__time

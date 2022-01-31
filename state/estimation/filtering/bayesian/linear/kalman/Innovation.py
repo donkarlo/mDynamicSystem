@@ -1,4 +1,4 @@
-from mDynamicSystem.measurement.Measurement import Measurement
+from mDynamicSystem.obs.Obs import Obs
 from mDynamicSystem.state import State
 from mMath.linearAlgebra.Vector import Vector
 from mMath.linearAlgebra.matrix.Matrix import Matrix
@@ -17,7 +17,7 @@ class Innovation:
 
     def __init__(self
                  , processMatrix: Matrix
-                 , currentObservation: Measurement
+                 , currentObservation: Obs
                  , priorCurrentEstimatedState: State):
         self._processMatrix = processMatrix
         self.__currentObservation = currentObservation

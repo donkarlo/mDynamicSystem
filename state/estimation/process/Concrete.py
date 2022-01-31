@@ -16,5 +16,5 @@ class Concrete(ProcessModel):
                          ,timeStep)
 
 
-    def _getPredictedStateRefVecWithoutNoise(self)->Vector:
+    def _getNextState(self)->Vector:
         return None

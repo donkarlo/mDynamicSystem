@@ -6,28 +6,20 @@ from mMath.data.cluster.gng.examples.trajectory.Trajectory import Trajectory
 from mMath.data.timeSerie.stochasticProcess.state.StateSpace import StateSpace
 
 
-class StateSpace:
+class StateSpace(StateSpace):
     def __init__(self):
-        self._clusters: List[Cluster] = []
-    def _getClusters(self)->List[Cluster] :
+        super().__init__()
+        self.__clusters: List[Cluster] = self.__getClusters()
+        loopingCluster: Cluster
+        for loopingClusterKey in self.__clusters:
+            superState: State = State(self.__clusters[loopingClusterKey].getVectors().getMeanVector(),
+                                      self.__clusters[loopingClusterKey].getVectors().getVarianceVector())
+            self.addState(superState)
+    def __getClusters(self)->List[Cluster] :
         '''
 
         :return:
         '''
-        if len(self._stateSpace) == 0:
-            trajectoryGng = Trajectory(200)
-            self._clusters = trajectoryGng.getClusters()
-        return self._clusters
-
-
-    def getStateSpace(self)->StateSpace:
-        '''
-        Makes the each cluster mean and variance a state
-        :return:
-        '''
-        loopingCluster:Cluster
-        if self._stateSpace.getLength() == 0:
-            for loopingCluster in self._getClusters():
-                superState:State = State(loopingCluster.getVectors().getMeanVector(), loopingCluster.getVectors().getVarianceVector())
-                self._stateSpace.addState(superState)
-        return self._stateSpace
+        trajectoryGng = Trajectory(3500)
+        self.__clusters = trajectoryGng.getClusters()
+        return self.__clusters

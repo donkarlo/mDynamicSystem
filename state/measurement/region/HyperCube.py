@@ -1,17 +1,17 @@
 from typing import List
 
-from mDynamicSystem.measurement.Measurement import Measurement
+from mDynamicSystem.obs.Obs import Obs
 from mDynamicSystem.state.measurement.region.Region import IntrestedRegion, Region
 
 
 class HyperCube(Region):
     '''To build a region based on measurements'''
-    def __init__(self,measurements:List[Measurement]):
+    def __init__(self, measurements:List[Obs]):
         self._measurements = measurements
 
     def getBoundries(self):
         for measurement in self._measurements:
-            measurement:Measurement
+            measurement:Obs
             dimsMinMax = []
             for componentIndex,component in enumerate(measurement):
                 component = component[0]

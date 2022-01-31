@@ -4,7 +4,7 @@ from mDynamicSystem.control.Input import Input
 
 
 class InputsSerie():
-    """A time serie of measurement vectors
+    """A time serie of obs vectors
     """
 
     def __init__(self, actionList:List[Input]):

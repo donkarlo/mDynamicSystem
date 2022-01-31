@@ -11,7 +11,7 @@ from mDynamicSystem.state.estimation.filtering.bayesian.multilevel.mjpf.discrete
 from mDynamicSystem.state.measurement.Model import Model as MeasurementModel
 from mDynamicSystem.state.estimation.process.Concrete import Concrete as ConcreteProcessModel
 from mDynamicSystem.state.estimation.process import Model as ProcessModel
-from mDynamicSystem.state.estimation.process.decorator.StateTransitionMatrix import StateTransitionMatrix
+from mDynamicSystem.state.estimation.process.decorator.StateTransitionMatrix import StateTransitionMatrix as StateTransitionMatrixProcessModel
 from mDynamicSystem.state.measurement.Concrete import Concrete as ConcreteMeasurementModel
 from mDynamicSystem.state.measurement.decorator.StateMorph import StateMorph
 
@@ -31,19 +31,19 @@ if __name__=="__main__":
 
     #particleFilterProcessModel
     concereteParticleFilterProcessModel = ConcreteProcessModel(startingSuperState)
-    particleFilterProcessModel: ProcessModel = StateTransitionMatrix(concereteParticleFilterProcessModel,TransitionMatrix())
+    particleFilterProcessModel: ProcessModel = StateTransitionMatrixProcessModel(concereteParticleFilterProcessModel,TransitionMatrix())
 
     #Measurement model
     concreteParticleFilterMeasurementModel = ConcreteMeasurementModel()
     particleFilterMeasurementModel: MeasurementModel = StateMorph(concreteParticleFilterMeasurementModel)
 
 
-    #particlefilter measurement state likelihood
+    #particlefilter obs state likelihood
     particlefilterMeasurementLikelihood = EuclideanMeasurementLikelihoodPdf(superStateSpace, particleFilterMeasurementModel)
 
     # Particle filter
     particleFilter = ParticleFilter(16
-                                    ,superStateSpace.getStateSpace()
+                                    ,superStateSpace
                                     ,particleFilterProcessModel
                                     ,particleFilterMeasurementModel
                                     ,particlefilterMeasurementLikelihood

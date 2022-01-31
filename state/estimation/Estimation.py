@@ -1,7 +1,7 @@
 import abc
 from mDynamicSystem.control import InputsSerie
 from mDynamicSystem.state.State import State
-from mDynamicSystem.measurement import Serie
+from mDynamicSystem.obs import Serie
 
 
 class Estimation(metaclass=abc.ABCMeta):

@@ -1,8 +1,8 @@
-from mMath.data.timeSerie.stochasticProcess.state.State import State
+from mMath.data.timeSerie.stochasticProcess.state.State import State as StochasticProcessState
 from mMath.linearAlgebra.Vector import Vector
 
 
-class State(State):
+class State(StochasticProcessState):
     def __init__(self,center:Vector,standardDeviation:Vector):
         '''
 
@@ -10,7 +10,6 @@ class State(State):
         :param standardDeviation:
         :param standardDerviationCoefficient:
         '''
-        super().__init__(center)
         self._center:Vector = center
         self._standardDeviation:Vector = standardDeviation
 

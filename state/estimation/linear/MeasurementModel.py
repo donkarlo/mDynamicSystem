@@ -3,7 +3,7 @@ from mDynamicSystem.state.estimation.filtering.bayesian.linear.kalman import Inn
 from mMath.linearAlgebra import Vector
 from mMath.linearAlgebra.matrix.Matrix import Matrix
 from mDynamicSystem.state import State
-from mDynamicSystem.measurement import Measurement
+from mDynamicSystem.obs import Obs
 
 
 class MeasurementModel(Model):
@@ -17,12 +17,7 @@ class MeasurementModel(Model):
         self.__measurementMatrix = measurementMatrix
         self.__measurementNoise = measurementNoise
 
-    def getStateByObservation(self
-                              , observation: Measurement
-                              , onservationNoise: Vector = None) -> State:
-        pass
-
-    def getObservationByState(self
+    def getMeasurementByState(self
                               , state: State
                               , onservationNoise: Vector = None) -> Measurement:
         pass
@@ -34,8 +29,8 @@ class MeasurementModel(Model):
 
         Parameters
         ----------
-        observation:Measurement
-            a vector of measurement
+        observation:Obs
+            a vector of obs
         state: State
             Prior Estimated State
 

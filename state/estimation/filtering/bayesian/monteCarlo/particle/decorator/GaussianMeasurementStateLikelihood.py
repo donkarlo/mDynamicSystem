@@ -1,11 +1,11 @@
-from mDynamicSystem.measurement.Measurement import Measurement
+from mDynamicSystem.obs.Obs import Obs
 from mDynamicSystem.state.State import State
 from mDynamicSystem.state.estimation.filtering.bayesian.monteCarlo.particle.decorator.Decorator import Decorator
 from mMath.data.probability.continous.gaussian.Gaussian import Gaussian
 
 
 class GaussianMeasurementStateLikelihood(Decorator):
-    def _getMeasurementLikelihood(self, expectedMeasurement: Measurement) -> float:
+    def _getMeasurementLikelihood(self, expectedMeasurement: Obs) -> float:
         '''
         :param state:
         :return:
