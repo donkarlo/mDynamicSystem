@@ -1,7 +1,7 @@
-from mDynamicSystem.robot.multiCopters.HexaCopter import HexaCopter
-from mDynamicSystem.robot.multiCopters.MultiCopter import MultiCopter
-from mDynamicSystem.robot.multiCopters.QuadCopter import QuadCopter
-from mDynamicSystem.robot.multiCopters.State import State
+from mDynamicSystem.robot.multiCopter.HexaCopter import HexaCopter
+from mDynamicSystem.robot.multiCopter.MultiCopter import MultiCopter
+from mDynamicSystem.robot.multiCopter.QuadCopter import QuadCopter
+from mDynamicSystem.robot.multiCopter.State import State
 
 
 class FactoryMethod():

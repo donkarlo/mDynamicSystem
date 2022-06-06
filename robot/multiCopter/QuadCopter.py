@@ -1,6 +1,6 @@
 from builtins import super
 
-from mDynamicSystem.robot.multiCopters.MultiCopter import MultiCopter
+from mDynamicSystem.robot.multiCopter.MultiCopter import MultiCopter
 
 
 class QuadCopter(MultiCopter):

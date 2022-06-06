@@ -1,5 +1,5 @@
-from mDynamicSystem.robot.multiCopters.MultiCopter import MultiCopter
-from mDynamicSystem.robot.multiCopters.FactoryMethod import FactoryMethod
+from mDynamicSystem.robot.multiCopter.MultiCopter import MultiCopter
+from mDynamicSystem.robot.multiCopter.FactoryMethod import FactoryMethod
 
 
 class Composit(MultiCopter):

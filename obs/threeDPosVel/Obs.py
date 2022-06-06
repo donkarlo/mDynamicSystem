@@ -1,9 +1,9 @@
 import numpy as np
 
-from mDynamicSystem.obs.Obs import Obs
+from mDynamicSystem.obs.Obs import Obs as BaseObs
 
 
-class Obs(Obs):
+class Obs(BaseObs):
     def __init__(self, time: float
                  , x: float
                  , y: float

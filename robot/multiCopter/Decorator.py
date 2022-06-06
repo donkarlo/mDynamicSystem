@@ -1,5 +1,5 @@
-from mDynamicSystem.robot.multiCopters.MultiCopter import MultiCopter
-from mDynamicSystem.robot.multiCopters.FactoryMethod import FactoryMethod
+from mDynamicSystem.robot.multiCopter.MultiCopter import MultiCopter
+from mDynamicSystem.robot.multiCopter.FactoryMethod import FactoryMethod
 
 
 class Decorator(MultiCopter):
@@ -11,10 +11,10 @@ if __name__=="__main__":
     mcf = FactoryMethod()
     multiCopter = mcf.makeMultiCopter(4)
 
-    from mDynamicSystem.robot.multiCopters.LidarDecorator import LidarDecorator
+    from mDynamicSystem.robot.multiCopter.LidarDecorator import LidarDecorator
     lidarDecoratedCopter = LidarDecorator(multiCopter)
 
-    from mDynamicSystem.robot.multiCopters.GpsDecorator import GpsDecorator
+    from mDynamicSystem.robot.multiCopter.GpsDecorator import GpsDecorator
     gpsLidarDecoratedCopter = GpsDecorator(lidarDecoratedCopter)
 
     print("The precision is: {}".format(gpsLidarDecoratedCopter.getStatePrecision()))

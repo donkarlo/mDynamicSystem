@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from mDynamicSystem.robot.multiCopters.State import State
+from mDynamicSystem.robot.multiCopter.State import State
 
 
 class Flyable(ABC):

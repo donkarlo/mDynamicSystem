@@ -1,5 +1,5 @@
-from mDynamicSystem.robot.multiCopters.Flyable import Flyable
-from mDynamicSystem.robot.multiCopters.State import State
+from mDynamicSystem.robot.multiCopter.Flyable import Flyable
+from mDynamicSystem.robot.multiCopter.State import State
 from abc import abstractmethod
 
 class MultiCopter(Flyable):

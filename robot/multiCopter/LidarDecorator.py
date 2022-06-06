@@ -1,4 +1,4 @@
-from mDynamicSystem.robot.multiCopters.Decorator import Decorator
+from mDynamicSystem.robot.multiCopter.Decorator import Decorator
 
 
 class LidarDecorator(Decorator):
