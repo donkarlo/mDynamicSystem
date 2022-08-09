@@ -1,7 +1,7 @@
 from mMath.linearAlgebra.Vector import Vector
 
 
-class Obs(Vector):
+class Obs:
     """Observation, many observations from different sensors may result in fewer states
     """
 

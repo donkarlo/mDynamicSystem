@@ -1,6 +1,6 @@
 import abc
 
-from mMath.data.probability.Pdf import Pdf
+from mMath.probability.Pdf import Pdf
 from mMath.linearAlgebra.Vector import Vector
 from mDynamicSystem.state.State import State
 

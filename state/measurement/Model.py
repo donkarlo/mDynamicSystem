@@ -1,7 +1,6 @@
-from mMath.data.probability.Pdf import Pdf
+from mMath.probability.Pdf import Pdf
 from mMath.linearAlgebra import Vector
 from mDynamicSystem.state import State
-from mDynamicSystem.obs import Obs
 import abc
 
 class Model(metaclass=abc.ABCMeta):
